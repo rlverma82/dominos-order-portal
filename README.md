@@ -6,4 +6,5 @@ Basic project to learn HTML, CSS and Javascript.
 
 Incorporated form validation.
 
+Deployed on Netlify : https://dominosorder.netlify.app/
 
