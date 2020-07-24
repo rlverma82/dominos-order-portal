@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<style> <!-- CSS -->
+
+	img
+	{
+		float:right;
+	}
+	h1
+	{
+		
+		font-family:Verdana;
+		text-align:center;
+		padding-left:80px;
+		background-color:white;
+		color:#1a5ca3;
+	}
+	#form
+	{
+				clear:both;
+				width: 60%;
+                background-color:whitesmoke;
+                margin:auto;
+                text-align: center;
+                border-radius: 5px;
+                
+	}
+	form{
+		display:inline-table;
+	}
+	.pay
+	{	
+		  background-color: #4CAF50;
+		  border: none;
+		  color: white;
+		  padding: 10px 25px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		  margin: 2px 2px;
+		  cursor: pointer;
+	}
+	.footer
+	{
+		clear:both;
+		padding:5px;
+		margin-top:5px;
+		background-color:#999999;
+		color:white;
+		text-align:right;
+	
+	}
+	
+</style>
+<title> Order Details </title>
+<script>
+	function validatename() <!-- function to validate name of the user by matching the user input to the regular expression specified in the code below -->
+	{
+		var name=document.getElementById("name").value;
+		var reg=/^[a-zA-Z\s\'\-]{2,40}$/;
+		if(reg.test(name))
+		{
+			document.getElementById("nameprompt").style.color="green";
+			document.getElementById("nameprompt").innerHTML="<strong>Valid</strong>";
+		}
+		else
+		{
+			document.getElementById("nameprompt").style.color="red";
+			document.getElementById("nameprompt").innerHTML="<strong>Enter 2-40 characters</strong>";
+		}
+	}
+	function validatephone() <!-- function to validate phone number of the user by comparing with the regular expression specified below -->
+	{
+		var phone=document.getElementById("phone").value;
+		var reg1=/^\d{5}-\d{5}$/;
+		if(reg1.test(phone))
+		{
+			document.getElementById("phoneprompt").style.color="green";
+			document.getElementById("phoneprompt").innerHTML="<strong>Valid</strong>";
+		}
+		else
+		{
+			document.getElementById("phoneprompt").style.color="red";
+			document.getElementById("phoneprompt").innerHTML="<strong>Use xxxxx-xxxxx format</strong>";
+		}
+	}
+	function validatemail() <!-- function to validate mail -->
+	{
+		var mail=document.getElementById("email").value;
+		var reg2=/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		if(reg2.test(mail))
+		{
+			document.getElementById("mailprompt").style.color="green";
+			document.getElementById("mailprompt").innerHTML="<strong>Valid</strong>";
+		}
+		else
+		{
+			document.getElementById("mailprompt").style.color="red";
+			document.getElementById("mailprompt").innerHTML="<strong>Use valid format</strong>";
+		}
+	}
+
+	function calc() <!-- function to calculate the total cost of order made by user -->
+	{
+		var quan = document.getElementById("quantity").value; <!-- number of pizzas ordered -->
+		var form_elements = document.getElementById('my_form').elements; 
+		var crust = form_elements['crust'].value; <!-- value of crust chosen specified by the radio button -->
+		var pizza=12;
+		var cnt=0; <!-- variable to count the number of toppings chosen -->
+		for(var i=0;i<form_elements['toppings'].length;i++)
+		{
+			if(form_elements['toppings'][i].checked==true)
+				cnt++;
+		}
+		var subtotal=crust*quan+pizza*quan+cnt*0.5*quan; <!-- total without taxes -->
+		document.getElementById("subtotal").value=subtotal;
+		var taxes=((crust*quan+pizza*quan+cnt*0.5*quan)*0.12).toFixed(2) <!-- taxes at 12% -->
+		document.getElementById("tax").value=taxes;
+		document.getElementById("gtotal").value= parseFloat(((crust*quan+pizza*quan+cnt*0.5*quan)*1.12).toFixed(2)); <!-- grand total -->
+	}
+
+</script>
+</head>
+
+<body>
+	
+	<h1>Domino's Pizza <img src="https://media-cdn.tripadvisor.com/media/photo-s/09/5c/4d/fc/domino-s-pizza-montana.jpg" height="80px" > </h1>
+	
+	<div id="form" style="border:1px solid	black" >
+		<form autocomplete="on" id="my_form" > <!-- form layout -->
+			<h2> Make an Order</h2>
+			<input type="radio"  id="Delivery" name="mode" onclick='document.getElementById("address").disabled = false;' checked > <!-- onclick used to enable the delivery text field to enter address -->
+			<label for="Delivery">Delivery</label>
+			<input type="radio" id="Pickup" name="mode" onclick='document.getElementById("address").disabled = true;' > <!-- onclick used to disable the delivery text field as it makes no sense to ask for address if user wants to pickup the order from store -->
+			<label for="Pickup">Pickup</label>
+			<br>
+			<br>
+			<table >
+				<tr>
+					<td> Name: </td>
+					<td><input type="text" id="name" onblur="validatename()" required> 	</td>
+					<td><span id="nameprompt">&nbsp;</span>	</td>
+				</tr>
+				<tr>
+					<td> Mobile Number: </td>
+					<td><input type="text" id="phone" onblur="validatephone()" placeholder="XXXXX-XXXXX" required> 	</td>
+					<td><span id="phoneprompt">&nbsp;</span>	</td>
+				</tr>
+				<tr >
+					<td> Address: </td>
+					<td><textarea id="address" rows="3" cols="21" ></textarea></td>
+					<td>	</td>
+				</tr>
+				<tr >
+					<td> Email: </td>
+					<td><input id="email" placeholder="____@___.com" onblur="validatemail()"></input></td>
+					<td><span id="mailprompt">&nbsp;</span>	</td>
+				</tr>
+				<tr>
+					<td> Quantity: ($12/pc) </td>
+					<td><input id="quantity" type="number" value=0.00 min=0 oninput="calc()" > 	</td>
+					<td>	</td>
+				</tr>
+			</table>
+			<br>
+			Choose a Crust: 	
+			<br>
+			<input type="radio" id="Thin Crust" value=2 name="crust" onchange="calc()">
+			<label for="Thin Crust">Wheat Thin Crust ($2/pc)</label><br>
+			<input type="radio" id="Cheese Burst" value=5 name="crust" onchange="calc()">
+			<label for="Cheese Burst">Cheese Burst ($5/pc)</label><br>
+			<input type="radio" id="Classic Hand Tossed" value=0 name="crust" checked onchange="calc()">
+			<label for="Classic Hand Tossed">Classic Hand Tossed ($0/pc)</label><br>	
+			
+			<br>
+			
+			Choose additional toppings ($0.5/pc each): 	
+			<br>
+			<input type="checkbox" id="Mushroom" name="toppings" onchange="calc()">
+			<label for="Mushroom">Mushroom</label><br>
+			<input type="checkbox" id="Jalapenos" name="toppings" onchange="calc()">
+			<label for="Jalapenos">Jalapenos</label><br>
+			<input type="checkbox" id="Golden Corn" name="toppings" onchange="calc()">
+			<label for="Golden Corn">Golden Corn</label><br>	
+			<input type="checkbox" id="Red Paprika" name="toppings" onchange="calc()">
+			<label for="Red Paprika">Red Paprika</label><br>	
+			<br>
+			<table>
+				<tr>
+					<td> Subtotal: $	</td>
+					<td> <input id="subtotal" type="number" value=0.00 readonly> </td>
+					
+				</tr>
+				<tr>
+					<td> Tax @ 12%: $	</td>
+					<td> <input id="tax" type="number" value=0.00 readonly> </td>
+				</tr>
+				<tr>
+					<td> Grand total: $	</td>
+					<td> <input id="gtotal" type="number" value=0.00 readonly> </td>
+				</tr>
+				
+			</table>
+			<hr>
+			<button class="pay" style="color:white;background-color:#4CAF50"> Pay</button>
+			
+			
+		</form>
+	</div>
+	<div class="footer">
+			Copyright &copy; 1997 Domino's Pizza
+	</div>
+</body>
+</html>
